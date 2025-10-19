@@ -9,6 +9,7 @@
 #include <wdt.h>
 #include <asm/io.h>
 #include <linux/bitops.h>
+#include <linux/errno.h>
 
 #define DW_WDT_CR	0x00
 #define DW_WDT_TORR	0x04
@@ -122,7 +123,7 @@ static int designware_wdt_probe(struct udevice *dev)
 		return ret;
 
 	ret = clk_enable(&clk);
-	if (ret)
+	if (ret && ret != -ENOSYS)
 		return ret;
 
 	priv->clk_khz = clk_get_rate(&clk) / 1000;
